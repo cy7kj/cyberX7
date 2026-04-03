@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>Cyber Security Scanner</title>
+<style>
+body{font-family:Arial;background:#0f2027;color:#fff;text-align:center;padding:20px;}
+.container{background:#1b2a33;padding:30px;border-radius:15px;max-width:600px;margin:auto;}
+input{width:80%;padding:10px;border-radius:10px;border:none;}
+button{padding:10px 20px;border:none;border-radius:10px;background:#00ffcc;cursor:pointer;}
+#result{margin-top:20px;}
+.warning{color:red;} .safe{color:#00ffcc;}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>🔐 Cyber Security Scanner</h2>
+<p>فحص الروابط باستخدام VirusTotal</p>
+
+<input id="url" placeholder="الصق الرابط هنا"><br><br>
+<button onclick="scan()">🚀 فحص</button>
+
+<div id="result"></div>
+</div>
+
+<script>
+async function scan(){
+let url=document.getElementById('url').value;
+let result=document.getElementById('result');
+
+result.innerHTML="⏳ جاري الفحص...";
+
+const res=await fetch("/scan",{method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({url})});
+
+const data=await res.json();
+
+let m=data.data.attributes.stats.malicious;
+
+if(m>0){
+result.innerHTML="⚠️ خبيث ("+m+")";
+result.className="warning";
+}else{
+result.innerHTML="✅ آمن";
+result.className="safe";
+}
+}
+</script>
+
+</body>
+</html>
